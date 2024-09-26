@@ -4,13 +4,11 @@ import sys
 
 currentPath = "/";
 
-def getLastDirInPath():
-    if(currentPath == "home/"):
-        return "home"
-    i = currentPath[:-1].rfind("/")
-    res = currentPath[(i+1):-1]
-    return res
-
+def cmdclear(*args):
+    try:
+        os.system('cls')
+    except: 
+        print("Error in Clear")
 
 def cmdexit(args):
     try:
@@ -62,16 +60,17 @@ def cmdrev(args):
     global ziparch
     try:
         arg1 = args[0];
+        arg2 = args[1]
     except:
         print("Requires at least 2 arguments.")
     if arg1 == "-t":
         try:
-            print((args[1])[::-1])
+            print((arg2)[::-1])
         except:
             print("Error in Rev with Text")
     elif arg1 == "-f":
         try:
-            zipRoot = zipRoot.joinpath(args[1])
+            zipRoot = zipRoot.joinpath(arg2)
             if zipRoot.exists() and zipRoot.is_file():
                 stroki = zipRoot.read_text()
                 print(stroki[::-1]) 
@@ -80,13 +79,6 @@ def cmdrev(args):
             zipRoot = zipPath(ziparch, at=str(zipRoot.parent.at));
         except:
             print("Error in Rev with File")
-
-def cmdclear(*args):
-    try:
-        os.system('cls')
-    except: 
-        print("Error in Clear")
-
 
 
 hostname, username, zipname = input("Enter host, user, zip for file system: ").split()
