@@ -1,13 +1,5 @@
-# user = None
+from datetime import datetime
 
-# def init(username):
-#   global user 
-#   user = username
-
-
-# def log(inner):
-
-l1 = "/"
-l1 = l1 + "test/"
-print(l1)
-  
+def log(uname, command, status):
+    with open("logger.txt", 'a') as logFile:
+        logFile.write(f"({datetime.now()}) {uname}: {command}, {status}\n");
