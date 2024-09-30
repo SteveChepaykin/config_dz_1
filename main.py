@@ -1,17 +1,17 @@
 from zipfile import ZipFile, Path as zipPath
 import os
 import sys
-from logger import log;
+from logger import log
 
-currentPath = "/";
-
-def cmdclear(*args):
+def cmdclear(args):
     try:
         os.system('cls')
         log(username, "clear", "SUCCESS")
+        return True
     except: 
         print("Error in Clear")
         log(username, "clear", "ERROR")
+        return False
 
 def cmdexit(args):
     try:
@@ -79,8 +79,10 @@ def cmdrev(args):
         log(username, "rev", "NO ARGS")
     if arg1 == "-t":
         try:
-            print((arg2)[::-1])
+            res = (arg2)[::-1]
+            print(res)
             log(username, "rev text", "SUCCESS")
+            return res 
         except:
             print("Error in Rev with Text")
             log(username, "rev text", "ERROR")
@@ -100,25 +102,26 @@ def cmdrev(args):
             log(username, "rev file", "ERROR")
 
 
-hostname, username, zipname = input("Enter host, user, zip for file system: ").split()
+if __name__ == '__main__':
+    commands = [["ls", cmdls], ["cd", cmdcd], ["exit", cmdexit], ["rev", cmdrev], ["clear", cmdclear]]
+    with ZipFile("home.zip", 'r') as ziparch:
+        zipRoot = zipPath(ziparch).joinpath("home")
 
-commands = [["ls", cmdls], ["cd", cmdcd], ["exit", cmdexit], ["rev", cmdrev], ["clear", cmdclear]]
-with ZipFile(zipname, 'r') as ziparch:
-    zipRoot = zipPath(ziparch).joinpath("home")
+        hostname, username = input("Enter host, user: ").split()
 
-    while True:
-        line = input(f"{username}@{hostname}#{zipRoot.filename} ")
-        splitted = line.split(" ")
+        while True:
+            line = input(f"{username}@{hostname}#{zipRoot.filename} ")
+            splitted = line.split(" ")
 
-        cmd = list(filter(lambda a: a[0] == splitted[0], commands))
-        if len(cmd) == 0:
-            print("Unknown command!")
-            continue
-        cmd = cmd[0]
-        if cmd[1] == None:
-            print("Unimplemented command!")
-            continue
-        if cmd[0] == "exit":
-            cmdexit(splitted[1:])
-            break
-        cmd[1](splitted[1:])
+            cmd = list(filter(lambda a: a[0] == splitted[0], commands))
+            if len(cmd) == 0:
+                print("Unknown command!")
+                continue
+            cmd = cmd[0]
+            if cmd[1] == None:
+                print("Unimplemented command!")
+                continue
+            if cmd[0] == "exit":
+                cmdexit(splitted[1:])
+                break
+            cmd[1](splitted[1:])
